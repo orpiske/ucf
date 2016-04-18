@@ -1,4 +1,4 @@
-package net.orpiske.ucf.engine;
+package net.orpiske.ucf.render;
 
 import net.orpiske.ucf.render.ConfigurationRender;
 
@@ -7,6 +7,6 @@ import net.orpiske.ucf.render.ConfigurationRender;
  */
 public class Jinja2Render implements ConfigurationRender {
     public void render() {
-        System.out.println("Hey, I am configuring :)");
+        System.out.println("Hey, I am rendering :)");
     }
 }

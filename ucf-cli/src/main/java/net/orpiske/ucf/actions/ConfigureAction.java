@@ -1,7 +1,7 @@
 package net.orpiske.ucf.actions;
 
 import net.orpiske.ucf.driver.Driver;
-import net.orpiske.ucf.engine.ConfigurationEngine;
+import net.orpiske.ucf.render.ConfigurationRender;
 import org.apache.commons.cli.*;
 
 import static java.util.Arrays.copyOfRange;
@@ -15,7 +15,7 @@ public class ConfigureAction extends Action {
 
     private boolean isHelp;
 
-    private ConfigurationEngine engine;
+    private ConfigurationRender render;
     private Driver driver;
 
     public ConfigureAction(String[] args) {
@@ -48,18 +48,18 @@ public class ConfigureAction extends Action {
     public int run() {
 
         try {
-            engine = (ConfigurationEngine) Class.forName("net.orpiske.ucf.engine.Jinja2Render").newInstance();
+            render = (ConfigurationRender) Class.forName("net.orpiske.ucf.render.Jinja2Render").newInstance();
 
-            engine.configure();
+            render.render();
         } catch (ClassNotFoundException e) {
-            System.out.println("Driver not found");
+            System.out.println("Render not found");
         } catch (InstantiationException e) {
             e.printStackTrace();
-            System.out.println("Bad driver");
+            System.out.println("Bad render");
             return -1;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-            System.out.println("Bad driver");
+            System.out.println("Bad render");
 
             return -1;
         }
