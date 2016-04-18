@@ -3,6 +3,8 @@ package net.orpiske.ucf.actions;
 import net.orpiske.ucf.engine.ConfigurationEngine;
 import org.apache.commons.cli.*;
 
+import static java.util.Arrays.copyOfRange;
+
 /**
  * Created by otavio on 4/18/16.
  */
@@ -13,6 +15,10 @@ public class ConfigureAction extends Action {
     private boolean isHelp;
 
     private ConfigurationEngine engine;
+
+    public ConfigureAction(String[] args) {
+        processCommand(args);
+    }
 
     protected void processCommand(String[] args) {
         CommandLineParser parser = new PosixParser();

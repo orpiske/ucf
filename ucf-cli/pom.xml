@@ -18,6 +18,13 @@
             <version>0.0.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.orpiske</groupId>
+            <artifactId>ucf-engine-jinja2</artifactId>
+            <version>0.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Apache Commons: CLI -->
         <dependency>
             <groupId>commons-cli</groupId>

@@ -15,6 +15,7 @@
  */
 package net.orpiske.ucf.main;
 
+import net.orpiske.ucf.actions.ConfigureAction;
 import net.orpiske.ucf.utils.Constants;
 
 import static java.util.Arrays.copyOfRange;
@@ -64,7 +65,7 @@ public class Main {
         configureOutput(logLevel);
 
         if (args.length == 0) {
-            System.err.println("The test case is missing!");
+            System.err.println("The action is missing!");
             System.exit(1);
         }
         else {
@@ -86,9 +87,9 @@ public class Main {
         }
 
         if (first.equals("configure")) {
-            // Installer installer = new Installer(newArgs);
+            ConfigureAction configureAction = new ConfigureAction(newArgs);
 
-            // ret = installer.run();
+            ret = configureAction.run();
             System.exit(ret);
         }
 
