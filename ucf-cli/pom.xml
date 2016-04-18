@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>net.orpiske</groupId>
-            <artifactId>ucf-engine-jinja2</artifactId>
+            <artifactId>ucf-render-jinja2</artifactId>
             <version>0.0.1</version>
             <scope>runtime</scope>
         </dependency>
