@@ -48,7 +48,7 @@ public class ConfigureAction extends Action {
     public int run() {
 
         try {
-            engine = (ConfigurationEngine) Class.forName("net.orpiske.ucf.engine.Jinja2Engine").newInstance();
+            engine = (ConfigurationEngine) Class.forName("net.orpiske.ucf.engine.Jinja2Render").newInstance();
 
             engine.configure();
         } catch (ClassNotFoundException e) {
