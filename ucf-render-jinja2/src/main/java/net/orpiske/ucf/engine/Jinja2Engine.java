@@ -1,10 +1,12 @@
 package net.orpiske.ucf.engine;
 
+import net.orpiske.ucf.render.ConfigurationRender;
+
 /**
  * Created by otavio on 4/18/16.
  */
-public class Jinja2Engine implements ConfigurationEngine {
-    public void configure() {
+public class Jinja2Engine implements ConfigurationRender {
+    public void render() {
         System.out.println("Hey, I am configuring :)");
     }
 }
