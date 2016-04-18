@@ -1,5 +1,6 @@
 package net.orpiske.ucf.actions;
 
+import net.orpiske.ucf.driver.Driver;
 import net.orpiske.ucf.engine.ConfigurationEngine;
 import org.apache.commons.cli.*;
 
@@ -15,32 +16,32 @@ public class ConfigureAction extends Action {
     private boolean isHelp;
 
     private ConfigurationEngine engine;
+    private Driver driver;
 
     public ConfigureAction(String[] args) {
         processCommand(args);
     }
 
     protected void processCommand(String[] args) {
-        CommandLineParser parser = new PosixParser();
+        if (args.length == 0) {
+            System.err.println("Not enough parameters");
 
-        options = new Options();
-
-        options.addOption("h", "help", false, "prints the help");
-        options.addOption("n", "name", true, "repository name");
-        options.addOption("u", "url", true, "repository url");
-
-        try {
-            cmdLine = parser.parse(options, args);
-        } catch (ParseException e) {
-            help(options, -1);
+            return;
         }
 
-        isHelp = cmdLine.hasOption("help");
-
-        String name = cmdLine.getOptionValue('n');
-        if (name == null) {
-            help(options, -1);
+        String first = args[0];
+        if (first.equals("artemis")) {
+            try {
+                driver = (Driver) Class.forName("net.orpiske.ucf.driver.ArtemisDriver").newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
 
     }
 
