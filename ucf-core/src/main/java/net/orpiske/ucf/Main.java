@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.orpiske.cfgcontrol;
+package net.orpiske.ucf;
 
 public class Main {
     private static void configureOutput(final String level) {
