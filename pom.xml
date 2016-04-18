@@ -44,5 +44,6 @@
         <module>ucf-core</module>
         <module>ucf-cli</module>
         <module>ucf-engine-jinja2</module>
+        <module>ucf-driver-artemis</module>
     </modules>
 </project>
