@@ -32,6 +32,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.orpiske</groupId>
+            <artifactId>ucf-provider-fs</artifactId>
+            <version>0.0.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Apache Commons: CLI -->
         <dependency>
             <groupId>commons-cli</groupId>
