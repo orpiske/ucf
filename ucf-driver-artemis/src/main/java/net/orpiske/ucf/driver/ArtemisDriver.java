@@ -4,16 +4,23 @@ import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.cli.*;
 
+import java.util.ArrayList;
+
 import static java.util.Arrays.copyOfRange;
 
 /**
  * Created by otavio on 4/18/16.
  */
 public class ArtemisDriver implements Driver {
+    private static ArrayList<String> units = new ArrayList<>();
     private CommandLine cmdLine;
     private Options options;
 
     private boolean isHelp;
+
+    static {
+        units.add("etc/broker.xml");
+    }
 
     @Override
     public void processOptions(String[] args) {
