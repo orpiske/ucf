@@ -45,5 +45,6 @@
         <module>ucf-cli</module>
         <module>ucf-render-jinja2</module>
         <module>ucf-driver-artemis</module>
+        <module>ucf-provider-fs</module>
     </modules>
 </project>

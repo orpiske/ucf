@@ -1,5 +1,6 @@
 package net.orpiske.ucf.driver;
 
+import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.cli.*;
 
@@ -36,6 +37,21 @@ public class ArtemisDriver implements Driver {
         if (name == null) {
             CliUtil.help(options, -1);
         }
+
+    }
+
+    @Override
+    public boolean hasNext() {
+        return false;
+    }
+
+    @Override
+    public ConfigurationUnit next() {
+        return null;
+    }
+
+    @Override
+    public void commit(ConfigurationUnit unit) {
 
     }
 

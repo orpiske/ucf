@@ -85,12 +85,18 @@ public class Main {
         if (first.equals("help")) {
             help(1);
         }
+        try {
 
-        if (first.equals("configure")) {
-            ConfigureAction configureAction = new ConfigureAction(newArgs);
+            if (first.equals("configure")) {
+                ConfigureAction configureAction = new ConfigureAction(newArgs);
 
-            ret = configureAction.run();
-            System.exit(ret);
+                ret = configureAction.run();
+                System.exit(ret);
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            System.exit(-1);
         }
 
         if (first.equals("--version")) {
