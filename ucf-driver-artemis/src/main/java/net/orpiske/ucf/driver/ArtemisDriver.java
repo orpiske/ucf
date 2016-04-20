@@ -27,14 +27,15 @@ public class ArtemisDriver implements Driver {
     public void processOptions(String[] args) {
         CommandLineParser parser = new PosixParser();
 
-        if (args.length == 0) {
-            CliUtil.help(options, -1);
-        }
-
         options = new Options();
 
         options.addOption("h", "help", false, "prints the help");
         options.addOption("o", "output", true, "the output path for the configuration");
+
+        if (args.length == 0) {
+            CliUtil.help(options, -1);
+        }
+
 
         try {
             cmdLine = parser.parse(options, args);
