@@ -12,7 +12,7 @@ public class CliUtil {
     public static void help(final Options options, int code) {
         HelpFormatter formatter = new HelpFormatter();
 
-        formatter.printHelp(Constants.BIN_NAME, options);
+        formatter.printHelp(Constants.BIN_NAME + " <action name> <driver name>", options);
         System.exit(code);
     }
 }

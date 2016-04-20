@@ -13,6 +13,7 @@ import static java.util.Arrays.copyOfRange;
  */
 public class ArtemisDriver implements Driver {
     private static ArrayList<String> units = new ArrayList<>();
+
     private CommandLine cmdLine;
     private Options options;
 
@@ -31,6 +32,9 @@ public class ArtemisDriver implements Driver {
         }
 
         options = new Options();
+
+        options.addOption("h", "help", false, "prints the help");
+        options.addOption("o", "output", true, "the output path for the configuration");
 
         try {
             cmdLine = parser.parse(options, args);

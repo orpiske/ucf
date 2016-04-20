@@ -86,6 +86,9 @@ public class ConfigureAction extends Action {
             driver = createDriverByName("artemis", "net.orpiske.ucf.driver.ArtemisDriver");
         }
 
+        String[] driverArgs = copyOfRange(args, 1, args.length);
+        driver.processOptions(driverArgs);
+
         render = createRenderByName("Jinja2", "net.orpiske.ucf.render.Jinja2Render");
         provider = createProviderByName("Default", "net.orpiske.ucf.provider.FileSystemProvider");
 
