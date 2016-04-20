@@ -31,4 +31,13 @@ public class ConfigurationUnit {
     public void setRenderedData(RenderedData<?> renderedData) {
         this.renderedData = renderedData;
     }
+
+    @Override
+    public String toString() {
+        return "ConfigurationUnit{" +
+                "unitId=" + unitId +
+                ", source=" + source +
+                ", renderedData=" + renderedData +
+                '}';
+    }
 }

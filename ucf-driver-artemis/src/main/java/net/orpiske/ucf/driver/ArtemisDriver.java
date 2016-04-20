@@ -1,6 +1,7 @@
 package net.orpiske.ucf.driver;
 
 import net.orpiske.ucf.types.ConfigurationUnit;
+import net.orpiske.ucf.types.UnitId;
 import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.cli.*;
 
@@ -19,8 +20,16 @@ public class ArtemisDriver implements Driver {
 
     private boolean isHelp;
 
+    private int current = 0;
+
     static {
+        units.add("etc/artemis.profile");
+        units.add("etc/artemis-roles.properties");
+        units.add("etc/artemis-users.properties");
+        units.add("etc/bootstrap.xml");
         units.add("etc/broker.xml");
+        units.add("etc/logging.properties");
+        units.add("etc/login.config");
     }
 
     @Override
@@ -36,7 +45,6 @@ public class ArtemisDriver implements Driver {
             CliUtil.help(options, -1);
         }
 
-
         try {
             cmdLine = parser.parse(options, args);
         } catch (ParseException e) {
@@ -44,21 +52,29 @@ public class ArtemisDriver implements Driver {
         }
 
         isHelp = cmdLine.hasOption("help");
-
-        String name = cmdLine.getOptionValue('n');
-        if (name == null) {
-            CliUtil.help(options, -1);
-        }
-
     }
 
     @Override
     public boolean hasNext() {
-        return false;
+        return current < units.size();
     }
 
     @Override
     public ConfigurationUnit next() {
+        if (hasNext()) {
+            ConfigurationUnit ret = new ConfigurationUnit();
+
+            UnitId unitId = new UnitId();
+
+            unitId.setName(units.get(current));
+            ret.setUnitId(unitId);
+
+            current++;
+            return ret;
+        }
+
+        // Hopefully, will never happen :)
+        // TODO: throw an exception in the future
         return null;
     }
 

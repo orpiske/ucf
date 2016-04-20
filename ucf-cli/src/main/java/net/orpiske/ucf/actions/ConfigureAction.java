@@ -96,7 +96,7 @@ public class ConfigureAction extends Action {
     }
 
     public int run() {
-
+        System.out.println("Doing deeds");
         engine.configure();
 
         return 0;

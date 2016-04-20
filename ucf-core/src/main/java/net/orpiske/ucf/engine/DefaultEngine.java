@@ -25,8 +25,9 @@ public class DefaultEngine implements ConfigurationEngine {
         while (driver.hasNext()) {
             ConfigurationUnit unit = driver.next();
 
+            System.out.println("Processing " + unit);
             if (!provider.contains(unit.getUnitId())) {
-                 break;
+                 continue;
             }
 
             ConfigurationSource configurationSource = provider.acquire(unit.getUnitId());
