@@ -52,6 +52,7 @@ public class DefaultEngine implements ConfigurationEngine {
         }
 
         isHelp = cmdLine.hasOption("help");
+        provider.eval(cmdLine);
     }
 
     public void configure() {

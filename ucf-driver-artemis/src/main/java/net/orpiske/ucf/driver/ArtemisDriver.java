@@ -18,13 +18,13 @@ public class ArtemisDriver implements Driver {
     private int current = 0;
 
     static {
-        units.add("etc/artemis.profile");
-        units.add("etc/artemis-roles.properties");
-        units.add("etc/artemis-users.properties");
-        units.add("etc/bootstrap.xml");
-        units.add("etc/broker.xml");
-        units.add("etc/logging.properties");
-        units.add("etc/login.config");
+        units.add("artemis.profile");
+        units.add("artemis-roles.properties");
+        units.add("artemis-users.properties");
+        units.add("bootstrap.xml");
+        units.add("broker.xml");
+        units.add("logging.properties");
+        units.add("login.config");
     }
 
 

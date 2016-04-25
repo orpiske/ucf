@@ -3,6 +3,7 @@ package net.orpiske.ucf.provider;
 import net.orpiske.ucf.types.ConfigurationSource;
 import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.types.UnitId;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 /**
@@ -11,6 +12,7 @@ import org.apache.commons.cli.Options;
 public interface Provider {
 
     void addOptions(Options options);
+    void eval(CommandLine commandLine);
 
     boolean contains(final UnitId unitId);
     ConfigurationSource acquire(final UnitId unitId);
