@@ -6,11 +6,14 @@ import net.orpiske.ucf.driver.Driver;
 import net.orpiske.ucf.provider.Provider;
 import net.orpiske.ucf.render.ConfigurationRender;
 import net.orpiske.ucf.types.RenderedData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by otavio on 4/18/16.
  */
 public class DefaultEngine implements ConfigurationEngine {
+    private static final Logger logger = LoggerFactory.getLogger(DefaultEngine.class);
     private Driver driver;
     private ConfigurationRender configurationRender;
     private Provider provider;
@@ -25,8 +28,9 @@ public class DefaultEngine implements ConfigurationEngine {
         while (driver.hasNext()) {
             ConfigurationUnit unit = driver.next();
 
-            System.out.println("Processing " + unit);
+            logger.debug("Processing {} ", unit);
             if (!provider.contains(unit.getUnitId())) {
+                logger.debug("Provider does not contain {}", unit.getUnitId().getName());
                  continue;
             }
 
