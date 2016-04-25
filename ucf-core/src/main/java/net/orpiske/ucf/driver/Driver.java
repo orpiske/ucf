@@ -1,6 +1,7 @@
 package net.orpiske.ucf.driver;
 
 import net.orpiske.ucf.types.ConfigurationUnit;
+import org.apache.commons.cli.Options;
 
 /**
  * Created by otavio on 4/18/16.
@@ -12,6 +13,9 @@ public interface Driver {
 
     void commit(ConfigurationUnit unit);
 
-    void processOptions(String[] args);
+    void addOptions(Options options);
+
     int run();
+
+
 }

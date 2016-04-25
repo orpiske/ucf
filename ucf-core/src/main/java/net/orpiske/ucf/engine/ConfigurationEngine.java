@@ -5,5 +5,6 @@ package net.orpiske.ucf.engine;
  */
 public interface ConfigurationEngine {
 
+    void processOptions(String[] args);
     void configure();
 }

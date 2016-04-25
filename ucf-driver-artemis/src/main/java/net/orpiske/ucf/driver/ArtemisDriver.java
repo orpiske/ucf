@@ -1,8 +1,8 @@
 package net.orpiske.ucf.driver;
 
+import net.orpiske.ucf.engine.CliUtil;
 import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.types.UnitId;
-import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.cli.*;
 
 import java.util.ArrayList;
@@ -14,11 +14,6 @@ import static java.util.Arrays.copyOfRange;
  */
 public class ArtemisDriver implements Driver {
     private static ArrayList<String> units = new ArrayList<>();
-
-    private CommandLine cmdLine;
-    private Options options;
-
-    private boolean isHelp;
 
     private int current = 0;
 
@@ -32,32 +27,17 @@ public class ArtemisDriver implements Driver {
         units.add("etc/login.config");
     }
 
-    @Override
-    public void processOptions(String[] args) {
-        CommandLineParser parser = new PosixParser();
-
-        options = new Options();
-
-        options.addOption("h", "help", false, "prints the help");
-        options.addOption("o", "output", true, "the output path for the configuration");
-
-        if (args.length == 0) {
-            CliUtil.help(options, -1);
-        }
-
-        try {
-            cmdLine = parser.parse(options, args);
-        } catch (ParseException e) {
-            CliUtil.help(options, -1);
-        }
-
-        isHelp = cmdLine.hasOption("help");
-    }
 
     @Override
     public boolean hasNext() {
         return current < units.size();
     }
+
+
+    public void addOptions(Options options) {
+        options.addOption("version", true, "the Artemis version");
+    }
+
 
     @Override
     public ConfigurationUnit next() {
