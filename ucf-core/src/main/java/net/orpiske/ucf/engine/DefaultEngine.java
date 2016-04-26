@@ -63,16 +63,18 @@ public class DefaultEngine implements ConfigurationEngine {
         while (driver.hasNext()) {
             ConfigurationUnit unit = driver.next();
 
-            logger.debug("Processing {} ", unit);
+            logger.trace("Processing {} ", unit);
             if (!provider.contains(unit.getUnitId())) {
-                logger.debug("Provider does not contain {}", unit.getUnitId().getName());
-                 continue;
+                logger.trace("Provider does not contain {}", unit.getUnitId().getName());
+                continue;
             }
 
             ConfigurationSource configurationSource = provider.acquire(unit.getUnitId());
             unit.setSource(configurationSource);
 
             RenderedData<?> renderedData = configurationRender.render(configurationSource);
+
+            logger.debug("Rendered template: \n{}\n", renderedData.getConfigurationData());
             unit.setRenderedData(renderedData);
 
             driver.commit(unit);
