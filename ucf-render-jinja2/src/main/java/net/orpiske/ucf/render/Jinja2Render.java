@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -41,8 +42,15 @@ public class Jinja2Render implements ConfigurationRender {
         String[] tmp = commandLine.getOptionValues("D");
 
         for (int i = 0; i < tmp.length; i+=2) {
-            context.put(tmp[i], tmp[i+1]);
+            if (!context.containsKey(tmp[i])) {
+                context.put(tmp[i], tmp[i+1]);
+            }
+            else {
+                logger.warn("Overwriting previous assignment of {}", tmp[i]);
+            }
             logger.debug("Declaring: {}={}", tmp[i], tmp[i+1]);
+
+
         }
     }
 
