@@ -2,6 +2,7 @@ package net.orpiske.ucf.render;
 
 import net.orpiske.ucf.types.RenderedData;
 import net.orpiske.ucf.types.ConfigurationSource;
+import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 /**
@@ -9,5 +10,7 @@ import org.apache.commons.cli.Options;
  */
 public interface ConfigurationRender {
     void addOptions(Options options);
+    void eval(CommandLine commandLine);
+
     RenderedData render(ConfigurationSource source);
 }
