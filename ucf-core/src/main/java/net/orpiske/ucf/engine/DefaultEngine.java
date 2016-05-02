@@ -55,7 +55,10 @@ public class DefaultEngine implements ConfigurationEngine {
 
         if (!isHelp) {
             provider.eval(cmdLine);
+            driver.eval(cmdLine);
+
             configurationRender.eval(cmdLine);
+
         }
     }
 

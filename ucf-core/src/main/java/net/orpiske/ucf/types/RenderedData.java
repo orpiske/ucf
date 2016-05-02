@@ -10,6 +10,10 @@ public class RenderedData<T> {
         return configurationData;
     }
 
+    public T getConfigurationData(Class<T> tClass) {
+        return configurationData;
+    }
+
     public void setConfigurationData(T configurationData) {
         this.configurationData = configurationData;
     }

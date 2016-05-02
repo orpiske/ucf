@@ -1,30 +1,31 @@
 package net.orpiske.ucf.driver;
 
-import net.orpiske.ucf.engine.CliUtil;
 import net.orpiske.ucf.types.ConfigurationUnit;
+import net.orpiske.ucf.types.Target;
 import net.orpiske.ucf.types.UnitId;
-import org.apache.commons.cli.*;
 
+import net.orpiske.ucf.utils.io.Committer;
+import org.apache.commons.cli.*;
 import java.util.ArrayList;
 
-import static java.util.Arrays.copyOfRange;
 
 /**
  * Created by otavio on 4/18/16.
  */
 public class ArtemisDriver implements Driver {
-    private static ArrayList<String> units = new ArrayList<>();
+    private static ArrayList<Target> units = new ArrayList<>();
 
     private int current = 0;
+    private String destination;
 
     static {
-        units.add("artemis.profile");
-        units.add("artemis-roles.properties");
-        units.add("artemis-users.properties");
-        units.add("bootstrap.xml");
-        units.add("broker.xml");
-        units.add("logging.properties");
-        units.add("login.config");
+        units.add(Target.build("etc", "artemis.profile"));
+        units.add(Target.build("etc", "artemis-roles.properties"));
+        units.add(Target.build("etc", "artemis-users.properties"));
+        units.add(Target.build("etc", "bootstrap.xml"));
+        units.add(Target.build("etc", "broker.xml"));
+        units.add(Target.build("etc", "logging.properties"));
+        units.add(Target.build("etc", "login.config"));
     }
 
 
@@ -36,6 +37,14 @@ public class ArtemisDriver implements Driver {
 
     public void addOptions(Options options) {
         options.addOption("version", true, "the Artemis version");
+        options.addOption("d", "destination", true, "the destination path where to save the rendered data");
+    }
+
+    public void eval(CommandLine commandLine) {
+        destination = commandLine.getOptionValue('d');
+        if (destination == null || destination.isEmpty()) {
+            throw new RuntimeException("The destination must not be null");
+        }
     }
 
 
@@ -45,8 +54,11 @@ public class ArtemisDriver implements Driver {
             ConfigurationUnit ret = new ConfigurationUnit();
 
             UnitId unitId = new UnitId();
+            Target target = units.get(current);
 
-            unitId.setName(units.get(current));
+            unitId.setName(target.getName());
+            unitId.setTarget(target);
+
             ret.setUnitId(unitId);
 
             current++;
@@ -60,7 +72,7 @@ public class ArtemisDriver implements Driver {
 
     @Override
     public void commit(ConfigurationUnit unit) {
-
+        Committer.commit(unit, destination);
     }
 
     @Override

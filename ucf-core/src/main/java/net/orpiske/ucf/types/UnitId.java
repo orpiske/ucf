@@ -8,6 +8,7 @@ import net.orpiske.ucf.contrib.version.Version;
 public class UnitId {
     private String name;
     private Version version;
+    private Target target;
 
     public String getName() {
         return name;
@@ -15,6 +16,14 @@ public class UnitId {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Target getTarget() {
+        return target;
+    }
+
+    public void setTarget(Target target) {
+        this.target = target;
     }
 
     @Override
