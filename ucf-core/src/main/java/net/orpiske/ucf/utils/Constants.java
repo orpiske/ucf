@@ -15,6 +15,8 @@
 */
 package net.orpiske.ucf.utils;
 
+import java.io.File;
+
 /**
  * Application constants
  * @author Otavio R. Piske <angusyoung@gmail.com>
@@ -24,10 +26,7 @@ public final class Constants {
 
 	public static final String VERSION = "0.0.1";
 
-	/**
-	 * Restricted constructor
-	 */
-	private Constants() {}
+	public static final String CONFIG_DIR;
 
 	/**
 	 * This property is used to set the configuration directory
@@ -35,4 +34,21 @@ public final class Constants {
 	public static final String HOME_PROPERTY = "net.orpiske.ucf.home";
 
 	public static final String BIN_NAME = "ucf";
+
+	static {
+		CONFIG_DIR = System.getProperty(HOME_PROPERTY) + File.separator
+				+ "conf";
+	}
+
+	/**
+	 * This constant holds the configuration file name for the backend
+	 */
+	public static final String CONFIG_FILE_NAME = "ucf.properties";
+
+	/**
+	 * Restricted constructor
+	 */
+	private Constants() {}
+
+
 }

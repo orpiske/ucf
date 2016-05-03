@@ -1,11 +1,13 @@
 package net.orpiske.ucf.actions;
 
+import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
 import net.orpiske.ucf.driver.Driver;
 import net.orpiske.ucf.engine.ConfigurationEngine;
 import net.orpiske.ucf.engine.DefaultEngine;
 import net.orpiske.ucf.provider.Provider;
 import net.orpiske.ucf.render.ConfigurationRender;
 import org.apache.commons.cli.*;
+import org.apache.commons.configuration.PropertiesConfiguration;
 
 import static java.util.Arrays.copyOfRange;
 
@@ -13,6 +15,8 @@ import static java.util.Arrays.copyOfRange;
  * Created by otavio on 4/18/16.
  */
 public class ConfigureAction extends Action {
+    private static final PropertiesConfiguration config = ConfigurationWrapper.getConfig();
+
     private CommandLine cmdLine;
     private Options options;
 
@@ -83,11 +87,19 @@ public class ConfigureAction extends Action {
 
         String first = args[0];
         if (first.equals("artemis")) {
-            driver = createDriverByName("artemis", "net.orpiske.ucf.driver.ArtemisDriver");
+            String driverName = config.getString("driver");
+            String driverClass = config.getString("driver." + driverName);
+
+            driver = createDriverByName("artemis", driverClass);
         }
 
-        render = createRenderByName("Jinja2", "net.orpiske.ucf.render.Jinja2Render");
-        provider = createProviderByName("Default", "net.orpiske.ucf.provider.FileSystemProvider");
+        String renderName = config.getString("render");
+        String renderClass = config.getString("render." + renderName);
+        render = createRenderByName(renderName, renderClass);
+
+        String providerName = config.getString("provider");
+        String providerClass = config.getString("provider." + providerName);
+        provider = createProviderByName(providerName, providerClass);
 
         engine = new DefaultEngine(driver, render, provider);
 

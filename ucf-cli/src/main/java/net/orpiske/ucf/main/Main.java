@@ -16,11 +16,19 @@
 package net.orpiske.ucf.main;
 
 import net.orpiske.ucf.actions.ConfigureAction;
+import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
 import net.orpiske.ucf.utils.Constants;
+import org.apache.commons.configuration.ConfigurationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.FileNotFoundException;
 
 import static java.util.Arrays.copyOfRange;
 
 public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     private static void help(int code) {
         System.out.println("Usage: ucf <action>\n");
 
@@ -58,11 +66,32 @@ public class Main {
         }
     }
 
+    /**
+     * Initializes the configuration object
+     */
+    private static void initConfig() {
+        try {
+            ConfigurationWrapper.initConfiguration(Constants.CONFIG_DIR,
+                    Constants.CONFIG_FILE_NAME);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+            System.exit(-3);
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+            System.exit(-3);
+        }
+    }
+
+
 
     public static void main(String[] args) {
         String logLevel = System.getProperty("net.orpiske.ucf.log.level");
-
         configureOutput(logLevel);
+
+        logger.debug("Initializing configuration");
+        initConfig();
 
         if (args.length == 0) {
             System.err.println("The action is missing!");
@@ -71,7 +100,6 @@ public class Main {
         else {
             System.out.println("Running " + args[0]);
         }
-
 
         int ret = 0;
 
@@ -85,7 +113,9 @@ public class Main {
         if (first.equals("help")) {
             help(1);
         }
+
         try {
+
 
             if (first.equals("configure")) {
                 ConfigureAction configureAction = new ConfigureAction(newArgs);
