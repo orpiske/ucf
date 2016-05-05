@@ -4,6 +4,8 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.common.io.Resources;
 import com.hubspot.jinjava.Jinjava;
+import com.hubspot.jinjava.JinjavaConfig;
+import com.hubspot.jinjava.loader.FileLocator;
 import net.orpiske.ucf.render.ConfigurationRender;
 import net.orpiske.ucf.types.ConfigurationSource;
 import net.orpiske.ucf.types.RenderedData;
@@ -14,9 +16,12 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -41,14 +46,39 @@ public class Jinja2Render implements ConfigurationRender {
         context = Maps.newHashMap();
         String[] tmp = commandLine.getOptionValues("D");
 
+        if (tmp == null) {
+            logger.debug("No variable has been declared");
+            return;
+        }
+
         for (int i = 0; i < tmp.length; i+=2) {
-            if (!context.containsKey(tmp[i])) {
-                context.put(tmp[i], tmp[i+1]);
+            String key=tmp[i];
+            String value=tmp[i+1];
+
+
+            if (!context.containsKey(key)) {
+                logger.debug("Declaring: {}={}", tmp[i], tmp[i+1]);
+                context.put(key, value);
             }
             else {
-                logger.warn("Overwriting previous assignment of {}", tmp[i]);
+                Object oldValue = context.get(key);
+
+                if (oldValue instanceof LinkedList) {
+                    logger.debug("Appending: {}={}", tmp[i], tmp[i+1]);
+                    LinkedList<String> list = (LinkedList<String>) oldValue;
+
+                    list.add(value);
+                }
+                else {
+                    logger.debug("Declaring new iterable: {}={}", tmp[i], tmp[i+1]);
+                    LinkedList<String> list = new LinkedList<>();
+
+                    list.add((String) oldValue);
+                    list.add(value);
+                    context.put(key, list);
+                }
             }
-            logger.debug("Declaring: {}={}", tmp[i], tmp[i+1]);
+
 
 
         }
@@ -56,9 +86,20 @@ public class Jinja2Render implements ConfigurationRender {
 
     @Override
     public RenderedData render(ConfigurationSource source) {
-        Jinjava jinjava = new Jinjava();
+        JinjavaConfig jinjavaConfig = new JinjavaConfig();
+        FileLocator fileLocator = null;
+        try {
+            File includeDir = new File(source.getFile().getParentFile(), "ucf-include");
 
-        String path = source.getFile().getAbsolutePath();
+            fileLocator = new FileLocator(includeDir);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Jinjava jinjava = new Jinjava(jinjavaConfig);
+        jinjava.setResourceLocator(fileLocator);
+
+
         String template = null;
         try {
             template = FileUtils.readFileToString(source.getFile(), Charsets.UTF_8.name());
