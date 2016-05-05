@@ -78,7 +78,6 @@ public class ConfigureAction extends Action {
     }
 
     protected void processCommand(String[] args) throws Exception {
-        System.out.println("Processing arguments");
         if (args.length == 0) {
             System.err.println("Not enough parameters");
 
@@ -108,7 +107,6 @@ public class ConfigureAction extends Action {
     }
 
     public int run() {
-        System.out.println("Doing deeds");
         engine.configure();
 
         return 0;
