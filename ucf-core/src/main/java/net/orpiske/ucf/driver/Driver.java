@@ -15,8 +15,4 @@ public interface Driver {
     ConfigurationUnit next();
 
     void commit(ConfigurationUnit unit);
-
-    int run();
-
-
 }
