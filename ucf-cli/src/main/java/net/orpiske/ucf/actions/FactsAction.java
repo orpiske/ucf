@@ -4,6 +4,7 @@ import net.orpiske.ucf.facter.DefaultFacter;
 import net.orpiske.ucf.facter.Facter;
 import org.apache.commons.cli.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,10 +42,27 @@ public class FactsAction extends Action {
     public int run() {
         Facter facter = new DefaultFacter();
 
-        Map<String, String> facts = facter.getFacts();
+        Map<String, Object> facts = facter.getFacts();
 
-        for (Map.Entry<String, String> entry : facts.entrySet()) {
-            System.out.println(entry.getKey() + ": " +  entry.getValue());
+        for (Map.Entry<String, Object> entry : facts.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+
+            if (value instanceof String) {
+                System.out.println(key + ": " + value);
+            }
+            else {
+                if (value instanceof List) {
+                    System.out.print(key + ": [");
+                    for (Object o : (List) value) {
+                        System.out.print(o + " ");
+                    }
+                    System.out.println("]");
+
+                }
+
+
+            }
         }
 
 

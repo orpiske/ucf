@@ -4,16 +4,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
-import java.util.HashMap;
-import java.util.Map;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.*;
 import java.lang.management.OperatingSystemMXBean;
+
+import static java.net.NetworkInterface.getNetworkInterfaces;
 
 /**
  * Created by opiske on 5/5/16.
  */
 public class DefaultFacter implements Facter {
     private static final Logger logger = LoggerFactory.getLogger(DefaultFacter.class);
-    private Map<String, String> facts = new HashMap<String, String>();
+    private Map<String, Object> facts = new HashMap<String, Object>();
 
     public DefaultFacter() {
 
@@ -53,9 +57,41 @@ public class DefaultFacter implements Facter {
 
         long maxMemory = Runtime.getRuntime().maxMemory();
         facts.put("sys_max_memory", String.valueOf(maxMemory));
+
+        try {
+            Enumeration<NetworkInterface> ifaces = getNetworkInterfaces();
+            int i = 0;
+            while (ifaces.hasMoreElements()) {
+                NetworkInterface iface = ifaces.nextElement();
+                String ifaceDisplayName = iface.getDisplayName();
+
+                String keyName = "net_dev_name_" + i;
+                facts.put(keyName, ifaceDisplayName);
+
+
+                Enumeration<InetAddress>  inetAddresses = iface.getInetAddresses();
+                List<String> addresses = new ArrayList<String>();
+                while (inetAddresses.hasMoreElements()) {
+                    InetAddress inetAddress = inetAddresses.nextElement();
+
+                    String address = inetAddress.getHostAddress();
+                    logger.trace("Address = {}", address);
+                    addresses.add(address);
+                }
+
+                String addrKeyName = "net_dev_addr_" + i;
+                facts.put(addrKeyName, addresses);
+                i++;
+            }
+            facts.put("net_dev_count", String.valueOf(i));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
-    public Map<String, String> getFacts() {
+    public Map<String, Object> getFacts() {
         logger.debug("Getting the facts");
 
         getSystemFacts();

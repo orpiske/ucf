@@ -87,7 +87,7 @@ public class Jinja2Render implements ConfigurationRender {
 
             Facter facter = new DefaultFacter();
 
-            Map<String, String> facts = facter.getFacts();
+            Map<String, Object> facts = facter.getFacts();
             context.putAll(facts);
         }
     }
