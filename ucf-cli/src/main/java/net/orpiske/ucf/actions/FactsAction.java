@@ -55,7 +55,7 @@ public class FactsAction extends Action {
                 if (value instanceof List) {
                     System.out.print(key + ": [");
                     for (Object o : (List) value) {
-                        System.out.print(o + " ");
+                        System.out.print(o + ", ");
                     }
                     System.out.println("]");
 

@@ -71,16 +71,24 @@ public class DefaultFacter implements Facter {
 
                 Enumeration<InetAddress>  inetAddresses = iface.getInetAddresses();
                 List<String> addresses = new ArrayList<String>();
+                List<String> hostnames = new ArrayList<String>();
                 while (inetAddresses.hasMoreElements()) {
                     InetAddress inetAddress = inetAddresses.nextElement();
 
                     String address = inetAddress.getHostAddress();
                     logger.trace("Address = {}", address);
                     addresses.add(address);
+
+                    String hostname = inetAddress.getHostName();
+                    hostnames.add(hostname);
                 }
 
                 String addrKeyName = "net_dev_addr_" + i;
                 facts.put(addrKeyName, addresses);
+
+                String addrHostName = "net_dev_hostname_" + i;
+                facts.put(addrHostName, hostnames);
+
                 i++;
             }
             facts.put("net_dev_count", String.valueOf(i));
