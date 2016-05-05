@@ -16,6 +16,7 @@
 package net.orpiske.ucf.main;
 
 import net.orpiske.ucf.actions.ConfigureAction;
+import net.orpiske.ucf.actions.FactsAction;
 import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
 import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.configuration.ConfigurationException;
@@ -85,7 +86,6 @@ public class Main {
     }
 
 
-
     public static void main(String[] args) {
         String logLevel = System.getProperty("net.orpiske.ucf.log.level");
         configureOutput(logLevel);
@@ -115,12 +115,17 @@ public class Main {
         }
 
         try {
-
-
             if (first.equals("configure")) {
                 ConfigureAction configureAction = new ConfigureAction(newArgs);
 
                 ret = configureAction.run();
+                System.exit(ret);
+            }
+
+            if (first.equals("facts")) {
+                FactsAction factsAction = new FactsAction(newArgs);
+
+                ret = factsAction.run();
                 System.exit(ret);
             }
         }

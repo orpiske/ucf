@@ -13,4 +13,5 @@ public interface ConfigurationRender {
     void eval(CommandLine commandLine);
 
     RenderedData render(ConfigurationSource source);
+
 }

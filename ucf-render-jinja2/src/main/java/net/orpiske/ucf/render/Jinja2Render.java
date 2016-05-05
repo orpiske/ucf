@@ -6,6 +6,8 @@ import com.google.common.io.Resources;
 import com.hubspot.jinjava.Jinjava;
 import com.hubspot.jinjava.JinjavaConfig;
 import com.hubspot.jinjava.loader.FileLocator;
+import net.orpiske.ucf.facter.DefaultFacter;
+import net.orpiske.ucf.facter.Facter;
 import net.orpiske.ucf.render.ConfigurationRender;
 import net.orpiske.ucf.types.ConfigurationSource;
 import net.orpiske.ucf.types.RenderedData;
@@ -32,6 +34,10 @@ public class Jinja2Render implements ConfigurationRender {
 
     private Map<String, Object> context = null;
 
+    public Jinja2Render() {
+        context = Maps.newHashMap();
+    }
+
     public void addOptions(Options options) {
         Option define  = Option.builder("D").argName("property=value")
                 .hasArgs()
@@ -43,7 +49,7 @@ public class Jinja2Render implements ConfigurationRender {
     }
 
     public void eval(CommandLine commandLine) {
-        context = Maps.newHashMap();
+
         String[] tmp = commandLine.getOptionValues("D");
 
         if (tmp == null) {
@@ -79,8 +85,10 @@ public class Jinja2Render implements ConfigurationRender {
                 }
             }
 
+            Facter facter = new DefaultFacter();
 
-
+            Map<String, String> facts = facter.getFacts();
+            context.putAll(facts);
         }
     }
 
