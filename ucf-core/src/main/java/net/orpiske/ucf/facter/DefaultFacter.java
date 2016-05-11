@@ -17,7 +17,7 @@ import static java.net.NetworkInterface.getNetworkInterfaces;
  */
 public class DefaultFacter implements Facter {
     private static final Logger logger = LoggerFactory.getLogger(DefaultFacter.class);
-    private Map<String, Object> facts = new HashMap<String, Object>();
+    private static Map<String, Object> facts = null;
 
     public DefaultFacter() {
 
@@ -95,15 +95,19 @@ public class DefaultFacter implements Facter {
         } catch (SocketException e) {
             e.printStackTrace();
         }
-
-
     }
 
-    public Map<String, Object> getFacts() {
+    public synchronized Map<String, Object> getFacts() {
         logger.debug("Getting the facts");
 
-        getSystemFacts();
-        getHardwareInfo();
+        if (facts == null) {
+            facts = new HashMap<String, Object>();
+
+            getSystemFacts();
+            getHardwareInfo();
+        }
+
+
         return facts;
     }
 }

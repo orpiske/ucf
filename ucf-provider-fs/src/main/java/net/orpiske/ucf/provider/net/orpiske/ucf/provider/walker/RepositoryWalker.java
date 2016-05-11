@@ -54,6 +54,11 @@ public class RepositoryWalker extends DirectoryWalker {
 
 			tmp.setPath(file.getPath());
 			tmp.setFile(file);
+
+			// TODO: bad, bad, bad ... read this from a settings file
+			File cbDir = new File(file.getParentFile().getParentFile().getParentFile(), "lib/handler");
+			tmp.setCbDir(cbDir);
+
 			fileList.add(tmp);
 
 		}

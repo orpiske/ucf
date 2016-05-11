@@ -92,6 +92,10 @@ public class Jinja2Render implements ConfigurationRender {
         }
     }
 
+    public Map<String, Object> getContext() {
+        return context;
+    }
+
     @Override
     public RenderedData render(ConfigurationSource source) {
         JinjavaConfig jinjavaConfig = new JinjavaConfig();

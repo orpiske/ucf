@@ -7,4 +7,6 @@ import java.util.Map;
  */
 public interface Facter {
     Map<String,Object> getFacts();
+
+    //void addCustomFact(String name, Object value);
 }

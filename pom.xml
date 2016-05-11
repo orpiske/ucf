@@ -47,5 +47,6 @@
         <module>ucf-driver-artemis</module>
         <module>ucf-provider-fs</module>
         <module>ucf-contrib</module>
+        <module>ucf-handler-groovy</module>
     </modules>
 </project>

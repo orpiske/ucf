@@ -5,10 +5,15 @@ import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.driver.Driver;
 import net.orpiske.ucf.provider.Provider;
 import net.orpiske.ucf.render.ConfigurationRender;
+import net.orpiske.ucf.types.Handler;
 import net.orpiske.ucf.types.RenderedData;
+import net.orpiske.ucf.types.exceptions.HandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.cli.*;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * Created by otavio on 4/18/16.
@@ -18,15 +23,17 @@ public class DefaultEngine implements ConfigurationEngine {
     private Driver driver;
     private ConfigurationRender configurationRender;
     private Provider provider;
+    private Handler handler;
 
     private boolean isHelp;
     private CommandLine cmdLine;
     private Options options;
 
-    public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider) {
+    public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider, Handler handler) {
         this.driver = driver;
         this.configurationRender = configurationRender;
         this.provider = provider;
+        this.handler = handler;
     }
 
     public void processOptions(String[] args) {
@@ -58,14 +65,17 @@ public class DefaultEngine implements ConfigurationEngine {
             driver.eval(cmdLine);
 
             configurationRender.eval(cmdLine);
-
         }
+
+        Map<String, Object> context = configurationRender.getContext();
+        handler.setContext(context);
     }
 
     public void configure() {
         if (isHelp) {
             CliUtil.help(options, 0);
         }
+
 
         while (driver.hasNext()) {
             ConfigurationUnit unit = driver.next();
@@ -78,13 +88,34 @@ public class DefaultEngine implements ConfigurationEngine {
 
             ConfigurationSource configurationSource = provider.acquire(unit.getUnitId());
             unit.setSource(configurationSource);
+            try {
+                File cbDir = unit.getSource().getCbDir();
+
+                handler.setInitialPath(cbDir);
+            } catch (HandlerException e) {
+                e.printStackTrace();
+            }
 
             RenderedData<?> renderedData = configurationRender.render(configurationSource);
 
-            logger.debug("Rendered template: \n{}\n", renderedData.getConfigurationData());
+            logger.trace("Rendered template: \n{}\n", renderedData.getConfigurationData());
             unit.setRenderedData(renderedData);
 
+            try {
+                handler.beforeCommit();
+            } catch (HandlerException e) {
+                e.printStackTrace();
+            }
+
             driver.commit(unit);
+
+            try {
+                handler.afterCommit();
+            } catch (HandlerException e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 }

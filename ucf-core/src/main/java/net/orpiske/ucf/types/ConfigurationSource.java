@@ -8,6 +8,7 @@ import java.io.File;
 public class ConfigurationSource {
     private String path;
     private File file;
+    private File cbDir;
 
     public String getPath() {
         return path;
@@ -23,5 +24,13 @@ public class ConfigurationSource {
 
     public void setFile(File file) {
         this.file = file;
+    }
+
+    public File getCbDir() {
+        return cbDir;
+    }
+
+    public void setCbDir(File cbDir) {
+        this.cbDir = cbDir;
     }
 }
