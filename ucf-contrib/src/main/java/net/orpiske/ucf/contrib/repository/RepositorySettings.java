@@ -116,7 +116,7 @@ public class RepositorySettings {
 			}
 		}
 		else {
-			throw new RepositorySetupException("This user already exists");
+			throw new RepositorySetupException("The repository already exists");
 		}
 		
 		PropertiesConfiguration userConfig;
