@@ -116,14 +116,7 @@ public class RepositoryAction extends Action {
 		}
 
 		repositoryInfo = new RepositoryInfo(name);
-
-
-		String url = cmdLine.getOptionValue('u');
-		if (url == null) {
-			help(options, -1);
-		}
-
-	}
+    }
 
 	@Override
 	protected void processCommand(String[] args) {
