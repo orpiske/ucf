@@ -15,6 +15,7 @@
  */
 package net.orpiske.ucf.main;
 
+import net.orpiske.ucf.actions.RepositoryAction;
 import net.orpiske.ucf.actions.ConfigureAction;
 import net.orpiske.ucf.actions.FactsAction;
 import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
@@ -126,6 +127,13 @@ public class Main {
                 FactsAction factsAction = new FactsAction(newArgs);
 
                 ret = factsAction.run();
+                System.exit(ret);
+            }
+
+            if (first.equals("repository")) {
+                RepositoryAction addRepositoryAction = new RepositoryAction(newArgs);
+
+                ret = addRepositoryAction.run();
                 System.exit(ret);
             }
         }
