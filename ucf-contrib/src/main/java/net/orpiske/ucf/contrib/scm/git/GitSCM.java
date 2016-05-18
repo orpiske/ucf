@@ -85,6 +85,7 @@ public class GitSCM implements Scm {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		Repository repository;
 
+
 		try {
 			repository = builder.setGitDir(repositoryDir)
 					.readEnvironment()
@@ -98,7 +99,6 @@ public class GitSCM implements Scm {
 		PullCommand pullCommand = git.pull();
 
 		pullCommand.setProgressMonitor(new TextProgressMonitor());
-
 
 		try {
 			pullCommand.call();
@@ -173,6 +173,7 @@ public class GitSCM implements Scm {
 
 		Git git = new Git(repository);
 		CommitCommand pullCommand = git.commit();
+
 
 
 		try {

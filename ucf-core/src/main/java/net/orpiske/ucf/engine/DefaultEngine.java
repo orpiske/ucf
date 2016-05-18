@@ -1,5 +1,6 @@
 package net.orpiske.ucf.engine;
 
+import net.orpiske.ucf.state.StateControl;
 import net.orpiske.ucf.types.ConfigurationSource;
 import net.orpiske.ucf.types.ConfigurationUnit;
 import net.orpiske.ucf.driver.Driver;
@@ -23,17 +24,20 @@ public class DefaultEngine implements ConfigurationEngine {
     private Driver driver;
     private ConfigurationRender configurationRender;
     private Provider provider;
+    private StateControl stateControl;
     private Handler handler;
 
     private boolean isHelp;
     private CommandLine cmdLine;
     private Options options;
 
-    public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider, Handler handler) {
+    public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider, Handler handler,
+                         StateControl stateControl) {
         this.driver = driver;
         this.configurationRender = configurationRender;
         this.provider = provider;
         this.handler = handler;
+        this.stateControl = stateControl;
     }
 
     public void processOptions(String[] args) {
@@ -76,6 +80,13 @@ public class DefaultEngine implements ConfigurationEngine {
             CliUtil.help(options, 0);
         }
 
+        File destination = driver.getDestination();
+        try {
+            stateControl.track(destination);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         while (driver.hasNext()) {
             ConfigurationUnit unit = driver.next();
@@ -108,14 +119,20 @@ public class DefaultEngine implements ConfigurationEngine {
             }
 
             driver.commit(unit);
+            try {
+                String path = destination.getPath();
+                File dest = unit.resolveDestination(path);
+
+                stateControl.save(dest, unit);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             try {
                 handler.afterCommit();
             } catch (HandlerException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 }

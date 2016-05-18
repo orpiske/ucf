@@ -1,5 +1,7 @@
 package net.orpiske.ucf.types;
 
+import java.io.File;
+
 /**
  * Created by otavio on 5/2/16.
  */
@@ -26,6 +28,11 @@ public class Target {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public String getFullPath() {
+        return path + File.separator + name;
     }
 
     public static Target build(String path, String name) {

@@ -1,5 +1,7 @@
 package net.orpiske.ucf.types;
 
+import java.io.File;
+
 /**
  * Created by otavio on 4/18/16.
  */
@@ -39,5 +41,12 @@ public class ConfigurationUnit {
                 ", source=" + source +
                 ", renderedData=" + renderedData +
                 '}';
+    }
+
+    public File resolveDestination(String destination) {
+        Target target = unitId.getTarget();
+
+        return new File(destination + File.separator + target.getPath() + File.separator
+                + target.getName());
     }
 }

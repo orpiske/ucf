@@ -6,6 +6,7 @@ import net.orpiske.ucf.engine.ConfigurationEngine;
 import net.orpiske.ucf.engine.DefaultEngine;
 import net.orpiske.ucf.provider.Provider;
 import net.orpiske.ucf.render.ConfigurationRender;
+import net.orpiske.ucf.state.StateControl;
 import net.orpiske.ucf.types.Handler;
 import org.apache.commons.cli.*;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -28,6 +29,7 @@ public class ConfigureAction extends Action {
     private Provider provider;
     private Handler handler;
     private ConfigurationEngine engine;
+    private StateControl stateControl;
 
     public ConfigureAction(String[] args) throws Exception {
         processCommand(args);
@@ -76,7 +78,11 @@ public class ConfigureAction extends Action {
         String handlerClass = config.getString("handler." + handlerName);
         handler = createByName(Handler.class, handlerName, handlerClass);
 
-        engine = new DefaultEngine(driver, render, provider, handler);
+        String scName = config.getString("state-control");
+        String scClass = config.getString("state-control." + scName);
+        stateControl = createByName(StateControl.class, scName, scClass);
+
+        engine = new DefaultEngine(driver, render, provider, handler, stateControl);
 
         String[] driverArgs = copyOfRange(args, 1, args.length);
         engine.processOptions(driverArgs);

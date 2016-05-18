@@ -48,5 +48,6 @@
         <module>ucf-provider-fs</module>
         <module>ucf-contrib</module>
         <module>ucf-handler-groovy</module>
+        <module>ucf-state-control</module>
     </modules>
 </project>

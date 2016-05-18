@@ -7,6 +7,7 @@ import net.orpiske.ucf.utils.io.Committer;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -20,6 +21,10 @@ public abstract class AbstractDriver  implements Driver {
 
     protected AbstractDriver(ArrayList<Target> units) {
         this.units = units;
+    }
+
+    public File getDestination() {
+        return new File(destination);
     }
 
 

@@ -13,11 +13,7 @@ import java.io.IOException;
  */
 public final class Committer {
     public static void commit(ConfigurationUnit unit, String destination) {
-        UnitId unitId = unit.getUnitId();
-        Target target = unitId.getTarget();
-
-        File outFile = new File(destination + File.separator + target.getPath() + File.separator
-                + target.getName());
+        File outFile = unit.resolveDestination(destination);
 
         try {
             FileUtils.writeStringToFile(outFile, (String) unit.getRenderedData().getConfigurationData());
