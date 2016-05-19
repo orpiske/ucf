@@ -1,15 +1,10 @@
 package net.orpiske.ucf.actions;
 
-import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
-import net.orpiske.ucf.driver.Driver;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import net.orpiske.ucf.engine.ConfigurationEngine;
 import net.orpiske.ucf.engine.DefaultEngine;
-import net.orpiske.ucf.provider.Provider;
-import net.orpiske.ucf.render.ConfigurationRender;
-import net.orpiske.ucf.state.StateControl;
-import net.orpiske.ucf.types.Handler;
-import org.apache.commons.cli.*;
-import org.apache.commons.configuration.PropertiesConfiguration;
+import net.orpiske.ucf.modules.DefaultEngineModule;
 
 import static java.util.Arrays.copyOfRange;
 
@@ -17,39 +12,12 @@ import static java.util.Arrays.copyOfRange;
  * Created by otavio on 4/18/16.
  */
 public class ConfigureAction extends Action {
-    private static final PropertiesConfiguration config = ConfigurationWrapper.getConfig();
-
-    private CommandLine cmdLine;
-    private Options options;
-
-    private boolean isHelp;
-
-    private ConfigurationRender render;
-    private Driver driver;
-    private Provider provider;
-    private Handler handler;
     private ConfigurationEngine engine;
-    private StateControl stateControl;
 
     public ConfigureAction(String[] args) throws Exception {
         processCommand(args);
     }
 
-
-    private <T> T createByName(Class<T> clazz, String providerName, String className) throws Exception {
-        try {
-            return (T) Class.forName(className).newInstance();
-        } catch (InstantiationException e) {
-            System.err.println("Class for " + providerName + " not found in the classpath");
-            throw e;
-        } catch (IllegalAccessException e) {
-            System.err.println("Illegal provider " + providerName);
-            throw e;
-        } catch (ClassNotFoundException e) {
-            System.err.println("Invalid provider " + providerName);
-            throw e;
-        }
-    }
 
     protected void processCommand(String[] args) throws Exception {
         if (args.length == 0) {
@@ -58,34 +26,13 @@ public class ConfigureAction extends Action {
             return;
         }
 
-        String first = args[0];
-        if (first.equals("artemis")) {
-            String driverName = config.getString("driver");
-            String driverClass = config.getString("driver." + driverName);
+        String driverName = args[0];
 
-            driver = createByName(Driver.class, "artemis", driverClass);
-        }
+        Injector injector = Guice.createInjector(new DefaultEngineModule(driverName));
+        engine = injector.getInstance(DefaultEngine.class);
 
-        String renderName = config.getString("render");
-        String renderClass = config.getString("render." + renderName);
-        render = createByName(ConfigurationRender.class, renderName, renderClass);
-
-        String providerName = config.getString("provider");
-        String providerClass = config.getString("provider." + providerName);
-        provider = createByName(Provider.class, providerName, providerClass);
-
-        String handlerName = config.getString("handler");
-        String handlerClass = config.getString("handler." + handlerName);
-        handler = createByName(Handler.class, handlerName, handlerClass);
-
-        String scName = config.getString("state-control");
-        String scClass = config.getString("state-control." + scName);
-        stateControl = createByName(StateControl.class, scName, scClass);
-
-        engine = new DefaultEngine(driver, render, provider, handler, stateControl);
-
-        String[] driverArgs = copyOfRange(args, 1, args.length);
-        engine.processOptions(driverArgs);
+        String[] progArgs = copyOfRange(args, 1, args.length);
+        engine.processOptions(progArgs);
     }
 
     public int run() {

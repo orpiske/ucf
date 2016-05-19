@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.cli.*;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.Map;
 
@@ -21,17 +22,20 @@ import java.util.Map;
  */
 public class DefaultEngine implements ConfigurationEngine {
     private static final Logger logger = LoggerFactory.getLogger(DefaultEngine.class);
-    private Driver driver;
-    private ConfigurationRender configurationRender;
-    private Provider provider;
-    private StateControl stateControl;
-    private Handler handler;
+
+    @Inject private Driver driver;
+    @Inject private ConfigurationRender configurationRender;
+    @Inject private Provider provider;
+    @Inject private StateControl stateControl;
+    @Inject private Handler handler;
 
     private CommandLine cmdLine;
     private Options options;
 
     private boolean isHelp;
     private String comment;
+
+    public DefaultEngine() {}
 
     public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider, Handler handler,
                          StateControl stateControl) {
