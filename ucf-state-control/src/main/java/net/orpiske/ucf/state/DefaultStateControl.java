@@ -22,11 +22,20 @@ public class DefaultStateControl implements StateControl {
     private File repository;
     private Git git;
 
+    public void initTracking(final File repository) throws Exception {
+        this.repository = repository;
+        logger.debug("Initializing traker on {}", repository.getPath());
+        InitCommand initCommand = Git.init();
+
+        initCommand.setDirectory(repository);
+        git = initCommand.call();
+    }
+
     /**
      * Access the repository
      * @param file the repository directory or file
      * @return A repository pointer object
-     * @throws ScmAccessException
+     * @throws IOException
      */
     private Repository accessRepository(final File file)
             throws IOException {
@@ -51,27 +60,17 @@ public class DefaultStateControl implements StateControl {
     }
 
     @Override
-    public void track(File repository) throws Exception {
-        this.repository = repository;
-        logger.debug("Initializing traker on {}", repository.getPath());
-        InitCommand initCommand = Git.init();
-
-        initCommand.setDirectory(repository);
-        git = initCommand.call();
-
-
-
-    }
-
-    @Override
-    public void save(File file, final ConfigurationUnit unit) throws Exception {
+    public void track(final File file, final ConfigurationUnit unit) throws Exception {
         logger.debug("Saving file {} in {}", file.getName(), repository.getPath());
         Repository repo = accessRepository(repository);
 
-        logger.debug("Repo path: {}", repo.getDirectory().getPath());
-
+        logger.trace("Repo path: {}", repo.getDirectory().getPath());
         Status status = git.status().call();
 
+        /**
+         * The rationale is that we don't need to do anything if the files are already
+         * tracked.
+         */
         for (String s : status.getUntracked()) {
             Target target = unit.getUnitId().getTarget();
 
@@ -84,9 +83,26 @@ public class DefaultStateControl implements StateControl {
 
                 AddCommand ac = git.add();
                 ac.addFilepattern(targetPath).call();
+                break;
             }
         }
+    }
 
+    @Override
+    public void save(final String comment) throws Exception {
+        Status status = git.status().call();
+
+        if (status.hasUncommittedChanges()) {
+            logger.info("Saving configuration state due to configuration changes");
+            CommitCommand commitCommand = git.commit();
+
+            commitCommand.setCommitter("ucf", "");
+            commitCommand.setMessage(comment);
+            commitCommand.call();
+        }
+        else {
+            logger.info("There were no changes to the configuration files. Skipping save state");
+        }
     }
 
     @Override

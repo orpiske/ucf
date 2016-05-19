@@ -9,7 +9,9 @@ import java.io.File;
  */
 public interface StateControl {
 
-    void track(final File repository) throws Exception;
-    void save(final File file, final ConfigurationUnit unit) throws Exception;
+    void initTracking(final File repository) throws Exception;
+
+    void track(final File file, final ConfigurationUnit unit) throws Exception;
+    void save(final String comment) throws Exception;
     void restore(final File file) throws Exception;
 }

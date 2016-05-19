@@ -27,9 +27,11 @@ public class DefaultEngine implements ConfigurationEngine {
     private StateControl stateControl;
     private Handler handler;
 
-    private boolean isHelp;
     private CommandLine cmdLine;
     private Options options;
+
+    private boolean isHelp;
+    private String comment;
 
     public DefaultEngine(Driver driver, ConfigurationRender configurationRender, Provider provider, Handler handler,
                          StateControl stateControl) {
@@ -46,6 +48,7 @@ public class DefaultEngine implements ConfigurationEngine {
         options = new Options();
         // Global options
         options.addOption("h", "help", false, "prints the help");
+        options.addOption("c", "comment", true, "the comment to use when saving the configuration state");
 
         // Sub-component-specific options
         driver.addOptions(options);
@@ -63,6 +66,7 @@ public class DefaultEngine implements ConfigurationEngine {
         }
 
         isHelp = cmdLine.hasOption("help");
+        comment = cmdLine.getOptionValue("comment");
 
         if (!isHelp) {
             provider.eval(cmdLine);
@@ -82,7 +86,7 @@ public class DefaultEngine implements ConfigurationEngine {
 
         File destination = driver.getDestination();
         try {
-            stateControl.track(destination);
+            stateControl.initTracking(destination);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,7 +127,7 @@ public class DefaultEngine implements ConfigurationEngine {
                 String path = destination.getPath();
                 File dest = unit.resolveDestination(path);
 
-                stateControl.save(dest, unit);
+                stateControl.track(dest, unit);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -133,6 +137,17 @@ public class DefaultEngine implements ConfigurationEngine {
             } catch (HandlerException e) {
                 e.printStackTrace();
             }
+        }
+
+        try {
+            if (comment == null) {
+                stateControl.save("Updated configuration");
+            }
+            else {
+                stateControl.save(comment);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
