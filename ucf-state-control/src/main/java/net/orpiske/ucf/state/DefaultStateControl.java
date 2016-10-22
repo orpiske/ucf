@@ -92,12 +92,14 @@ public class DefaultStateControl implements StateControl {
     public void save(final String comment) throws Exception {
         Status status = git.status().call();
 
+
         if (status.hasUncommittedChanges()) {
-            logger.info("Saving configuration state due to configuration changes");
+            logger.info("Saving configuration state for due to configuration changes");
             CommitCommand commitCommand = git.commit();
 
             commitCommand.setCommitter("ucf", "");
             commitCommand.setMessage(comment);
+            commitCommand.setAll(true);
             commitCommand.call();
         }
         else {
@@ -107,6 +109,5 @@ public class DefaultStateControl implements StateControl {
 
     @Override
     public void restore(File file) throws Exception {
-
     }
 }
