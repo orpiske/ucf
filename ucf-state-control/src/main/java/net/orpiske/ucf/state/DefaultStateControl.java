@@ -19,16 +19,23 @@ import org.slf4j.LoggerFactory;
 public class DefaultStateControl implements StateControl {
     private static final Logger logger = LoggerFactory.getLogger(DefaultStateControl.class);
 
-    private File repository;
     private Git git;
+    private File repositoryPath;
 
-    public void initTracking(final File repository) throws Exception {
-        this.repository = repository;
-        logger.debug("Initializing traker on {}", repository.getPath());
+    public void initTracking(final File repositoryPath) throws Exception {
+        this.repositoryPath = repositoryPath;
+        logger.debug("Initializing traker on {}", repositoryPath.getPath());
         InitCommand initCommand = Git.init();
 
-        initCommand.setDirectory(repository);
+        initCommand.setDirectory(repositoryPath);
         git = initCommand.call();
+    }
+
+    public void open(final File repositoryPath) throws Exception {
+        this.repositoryPath = repositoryPath;
+        // Repository repository = accessRepository(repositoryPath);
+
+        git = Git.open(repositoryPath);
     }
 
     /**
@@ -61,8 +68,8 @@ public class DefaultStateControl implements StateControl {
 
     @Override
     public void track(final File file, final ConfigurationUnit unit) throws Exception {
-        logger.debug("Saving file {} in {}", file.getName(), repository.getPath());
-        Repository repo = accessRepository(repository);
+        logger.debug("Saving file {} in {}", file.getName(), repositoryPath.getPath());
+        Repository repo = accessRepository(repositoryPath);
 
         logger.trace("Repo path: {}", repo.getDirectory().getPath());
         Status status = git.status().call();
@@ -108,6 +115,12 @@ public class DefaultStateControl implements StateControl {
     }
 
     @Override
-    public void restore(File file) throws Exception {
+    public void restore(RestorePointer pointer) throws Exception {
+        CheckoutCommand checkoutCommand = git.checkout();
+
+        checkoutCommand.setAllPaths(true);
+        checkoutCommand.setForce(true);
+        checkoutCommand.setStartPoint(pointer.getId());
+        checkoutCommand.call();
     }
 }

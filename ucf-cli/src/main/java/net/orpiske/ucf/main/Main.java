@@ -18,6 +18,7 @@ package net.orpiske.ucf.main;
 import net.orpiske.ucf.actions.RepositoryAction;
 import net.orpiske.ucf.actions.ConfigureAction;
 import net.orpiske.ucf.actions.FactsAction;
+import net.orpiske.ucf.actions.StateAction;
 import net.orpiske.ucf.contrib.configuration.ConfigurationWrapper;
 import net.orpiske.ucf.utils.Constants;
 import org.apache.commons.configuration.ConfigurationException;
@@ -134,6 +135,13 @@ public class Main {
                 RepositoryAction addRepositoryAction = new RepositoryAction(newArgs);
 
                 ret = addRepositoryAction.run();
+                System.exit(ret);
+            }
+
+            if (first.equals("state")) {
+                StateAction stateAction = new StateAction(newArgs);
+
+                ret = stateAction.run();
                 System.exit(ret);
             }
         }
